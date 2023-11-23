@@ -1,23 +1,5 @@
 'use strict';
 
-const moviesContainer = document.querySelector('.movies-container');
-const modal = document.querySelector('.modal');
-const modalHeader = document.querySelector('.modal-header');
-const modalAdditional = document.querySelector('.modal-additional');
-const btnModalClose = document.querySelector('.modal-btn-close');
-const cinemaNameMap = new Map([
-  ['NHR', 'נהריה'],
-  ['KL', 'כרמיאל'],
-  ['KR', 'קריון'],
-  ['GCH', 'חיפה'],
-  ['KSO', 'כפר סבא'],
-  ['PT', 'פתח תקווה'],
-  ['MOD', 'מודיעין'],
-  ['RT', 'רחובות'],
-  ['ASD', 'אשדוד'],
-  ['AN', 'אשקלון'],
-]);
-
 class Movie {
   constructor(cinema, name, date, time, img, link, text, trailer) {
     this.cinema = cinema;
@@ -69,93 +51,30 @@ class Movie {
   }
 }
 
-moviesContainer.addEventListener('click', (e) => {
-  if (e.target.classList.contains('movie-img')) {
-    const currentMovie = new Movie(
-      e.target.getAttribute('data-cinema'),
-      e.target.getAttribute('data-name'),
-      e.target.getAttribute('data-date'),
-      e.target.getAttribute('data-time'),
-      e.target.getAttribute('data-img'),
-      e.target.getAttribute('data-link'),
-      e.target.getAttribute('data-text'),
-      e.target.getAttribute('data-trailer')
-    );
-    loadModalWithInfo(currentMovie);
-  }
-});
-
-modal.addEventListener('click', (e) => {
-  if (e.target === modal) {
-    removeModal();
-  }
-});
-
-document.addEventListener('keydown', (e) => {
-  console.log(e.key);
-  if (e.key === 'Escape' && !modal.classList.contains('hidden')) removeModal();
-});
-
-btnModalClose.addEventListener('click', (e) => {
-  removeModal();
-});
-
-function openYoutubePlayer(currentMovie) {
-  const youtubePlayerContainer = document.getElementById(
-    'youtube-player-container'
-  ); // Make sure this exists in your HTML
-  youtubePlayerContainer.innerHTML = `
-    <div class modal-container>
-      <iframe class="youtube-player" width="560" height="315" src="${currentMovie?.trailer}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
-  `;
-}
-
-function loadModalWithInfo(movie) {
-  showModal();
-  openYoutubePlayer(movie);
-  loadModalAdditionInfo(movie);
-}
-
-function loadModalAdditionInfo(movie) {
-  // if (modalHeader) modalHeader.innerHTML = `${movie?.name}`;
-  if (modalAdditional) {
-    modalAdditional.innerHTML = `
-    <div class="movie-title-container movie-title-container-modal">
-    <p class="movie-title movie-text">${movie.name}</p>
-</div>
-<div class="movie-details-container">
-  <p class="movie-cinema movie-text">${
-    cinemaNameMap.get(movie.cinema) ? cinemaNameMap.get(movie.cinema) : ''
-  } HOT CINEMA</p>
-  <p class="movie-date movie-text">${movie.date}</p>
-  <p class="movie-time movie-text">${movie.time}</p> 
-</div>
-<a
-  class="movie-link btn movie-link-modal"
-  href="${movie.link}"
-  >לרכישה</a
->
-</div>
-    `;
-  }
-}
-
-function generateMultipleMarkup(movies) {
-  moviesContainer.innerHTML = movies.reduce((html, movie) => {
-    // console.log(movie);
-    // console.log(html);
-    return html + movie.generateMarkup();
-  }, '');
-}
-
-function showModal() {
-  if (modal) modal.classList.remove('hidden');
-}
-
-function removeModal() {
-  if (modal) modal.classList.add('hidden');
-}
+const moviesContainer = document.querySelector('.movies-container');
+const modal = document.querySelector('.modal');
+const modalHeader = document.querySelector('.modal-header');
+const modalAdditional = document.querySelector('.modal-additional');
+const btnModalClose = document.querySelector('.modal-btn-close');
+const btnFilter = document.querySelectorAll('.filter');
+let filter = 'ALL';
+let shownMovies;
+const btnMainFilter = document.querySelector('.filter-main-btn');
+const dropdownContent = document.querySelector('.dropdown-content');
+const allCinemaBtns = document.querySelectorAll('.filter-btn-cinema');
+const cinemaNameMap = new Map([
+  ['NHR', 'נהריה'],
+  ['KL', 'כרמיאל'],
+  ['KR', 'קריון'],
+  ['GCH', 'חיפה'],
+  ['KSO', 'כפר סבא'],
+  ['PT', 'פתח תקווה'],
+  ['MOD', 'מודיעין'],
+  ['RT', 'רחובות'],
+  ['ASD', 'אשדוד'],
+  ['AN', 'אשקלון'],
+  ['ALL', 'כל בתי הקולנוע'],
+]);
 
 const movie1 = new Movie(
   'KSO',
@@ -234,6 +153,133 @@ const movie7 = new Movie(
   'https://www.youtube.com/embed/f95yj7d8A3c?si=Im4ILY8vXuofd0nt'
 );
 
-const movies = [movie1, movie2, movie3, movie4, movie5, movie6, movie7];
+const allMovies = [movie1, movie2, movie3, movie4, movie5, movie6, movie7];
 
-generateMultipleMarkup(movies);
+moviesContainer.addEventListener('click', (e) => {
+  if (e.target.classList.contains('movie-img')) {
+    const currentMovie = new Movie(
+      e.target.getAttribute('data-cinema'),
+      e.target.getAttribute('data-name'),
+      e.target.getAttribute('data-date'),
+      e.target.getAttribute('data-time'),
+      e.target.getAttribute('data-img'),
+      e.target.getAttribute('data-link'),
+      e.target.getAttribute('data-text'),
+      e.target.getAttribute('data-trailer')
+    );
+    loadModalWithInfo(currentMovie);
+  }
+});
+
+btnFilter.forEach((btn) =>
+  btn.addEventListener('click', () => updateFilter(btn))
+);
+
+function updateFilter(btn) {
+  filter = btn.getAttribute('data-filter');
+  reloadMovies();
+}
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    removeModal();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) removeModal();
+});
+
+window.addEventListener('load', function () {
+  reloadMovies();
+});
+
+btnModalClose.addEventListener('click', (e) => {
+  removeModal();
+});
+
+function openYoutubePlayer(currentMovie) {
+  const youtubePlayerContainer = document.getElementById(
+    'youtube-player-container'
+  ); // Make sure this exists in your HTML
+  youtubePlayerContainer.innerHTML = `
+    <div class modal-container>
+      <iframe class="youtube-player" width="560" height="315" src="${currentMovie?.trailer}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  `;
+}
+
+function loadModalWithInfo(movie) {
+  showModal();
+  openYoutubePlayer(movie);
+  loadModalAdditionInfo(movie);
+}
+
+function loadModalAdditionInfo(movie) {
+  // if (modalHeader) modalHeader.innerHTML = `${movie?.name}`;
+  if (modalAdditional) {
+    modalAdditional.innerHTML = `
+    <div class="movie-title-container movie-title-container-modal">
+    <p class="movie-title movie-text">${movie.name}</p>
+</div>
+<div class="movie-details-container">
+  <p class="movie-cinema movie-text">${
+    cinemaNameMap.get(movie.cinema) ? cinemaNameMap.get(movie.cinema) : ''
+  } HOT CINEMA</p>
+  <p class="movie-date movie-text">${movie.date}</p>
+  <p class="movie-time movie-text">${movie.time}</p> 
+</div>
+<a
+  class="movie-link btn movie-link-modal"
+  href="${movie.link}"
+  >לרכישה</a
+>
+</div>
+    `;
+  }
+}
+
+function generateMultipleMarkup(movies) {
+  moviesContainer.innerHTML = movies.reduce((html, movie) => {
+    // console.log(movie);
+    // console.log(html);
+    return html + movie.generateMarkup();
+  }, '');
+}
+
+function showModal() {
+  if (modal) modal.classList.remove('hidden');
+}
+
+function removeModal() {
+  if (modal) modal.classList.add('hidden');
+}
+
+function generateMarkupFiltered(filter) {
+  if (!filter || filter === 'ALL') {
+    shownMovies = allMovies;
+  } else {
+    shownMovies = allMovies.filter((movie) => movie.cinema === filter);
+  }
+  // console.log(shownMovies);
+  generateMultipleMarkup(shownMovies);
+}
+
+function reloadMovies() {
+  if (btnMainFilter)
+    btnMainFilter.innerHTML = cinemaNameMap.get(filter.toString());
+  generateMarkupFiltered(filter);
+}
+// generateMultipleMarkup(allMovies);
+
+function unhideDroplistItems() {
+  const cinemaList = allMovies.map((movie) => movie.cinema);
+  console.log(cinemaList);
+  allCinemaBtns.forEach((btn) => {
+    if (cinemaList.includes(btn.getAttribute('data-filter')))
+      btn.classList.remove('hidden');
+    else btn.classList.add('hidden');
+  });
+}
+
+unhideDroplistItems();
