@@ -1,0 +1,215 @@
+:root {
+  --primary-color: #231f20;
+  --secondary-color: #353434;
+  --text-color: #ffffff;
+  --accent-color: #ee1e28;
+  --secondary-accent-color: #cf5094;
+  --main-gradient: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 1) 0%,
+    rgba(255, 55, 157, 1) 75%,
+    rgba(255, 80, 228, 1) 100%
+  );
+}
+
+* {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  font-family: 'Rubik', sans-serif;
+}
+
+.logo-img {
+  display: grid;
+  margin-left: 15px;
+}
+
+.header-img {
+  width: 1200px;
+  /* border-radius: 8px; */
+}
+
+body {
+  background-color: var(--secondary-color);
+}
+
+article {
+  width: 1200px;
+  background-color: var(--primary-color);
+  margin: auto;
+}
+
+.movies-container {
+  background-color: var(--primary-color);
+  width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* gap: 15px; */
+  padding: 20px;
+  width: 200px;
+  text-align: right;
+  justify-content: center;
+  gap: 15px;
+}
+
+.movie {
+  background-color: var(--secondary-color);
+  display: flexbox;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  /* border-radius: 12px; */
+  border-style: solid;
+  border-width: 4px;
+  border-image: var(--main-gradient) 1 stretch;
+  box-shadow: 10px 10px 20px 10px rgba(0, 0, 0, 0.2);
+}
+
+.movie-cinema,
+.movie-date,
+.movie-time {
+  margin-right: 15px;
+  background-color: var(--secondary-color);
+}
+
+.movie-details-container {
+  background-color: var(--secondary-color);
+}
+
+.movie-date {
+}
+
+.movie-img {
+  width: 250px;
+  height: 350px;
+  /* border-radius: 12px; */
+}
+
+.btn {
+  background-color: var(--primary-color);
+  border-top: 5px solid var(--accent-color);
+  padding: 20px 40px;
+  /* border-radius: 0 0 8px 8px; */
+  margin-top: 20px;
+  text-align: center;
+  align-self: center;
+
+  display: grid;
+}
+
+.movie-title {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  background-color: var(--secondary-accent-color) 1;
+  margin: 10px;
+}
+
+.movie-cinema {
+  font-size: 22px;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 7px;
+  background-image: var(--main-gradient);
+}
+
+.movie-link:link,
+.movie-link:visited {
+  font-size: 24px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.movie-link:hover {
+  background-color: var(--accent-color);
+  transform: scale(1.1);
+  transform: ;
+  box-shadow: 10px 10px 20px 10px rgba(0, 0, 0, 1);
+}
+
+nav {
+  justify-self: end;
+  align-self: center;
+  margin-right: 15px;
+}
+
+header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.divider {
+  border-bottom: 5px solid;
+  border-image: var(--main-gradient) 1 stretch;
+  grid-column: 1 / -1;
+}
+
+.movie-text {
+  margin: 10px;
+}
+
+.movie-title-container {
+  padding: 12px 0px;
+  min-height: 80px;
+}
+
+.img-header {
+  margin-bottom: 50px;
+}
+
+/* DROPDOWN */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* */
+
+/* MODAL */
+
+.modal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: var(--primary-color);
+  margin: 15% auto; /* Center the modal */
+  padding: 20px; /* Padding around the iframe */
+  border: 1px solid var(--secondary-color);
+  width: calc(560px); /* iframe width + padding */
+  height: calc(315px + 40px); /* iframe height + padding */
+  box-shadow: 20px 20px 20px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hidden {
+  display: none;
+}
