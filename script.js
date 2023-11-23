@@ -2,6 +2,21 @@
 
 const moviesContainer = document.querySelector('.movies-container');
 const modal = document.querySelector('.modal');
+const modalHeader = document.querySelector('.modal-header');
+const modalAdditional = document.querySelector('.modal-additional');
+const btnModalClose = document.querySelector('.modal-btn-close');
+const cinemaNameMap = new Map([
+  ['NHR', 'נהריה'],
+  ['KL', 'כרמיאל'],
+  ['KR', 'קריון'],
+  ['GCH', 'חיפה'],
+  ['KSO', 'כפר סבא'],
+  ['PT', 'פתח תקווה'],
+  ['MOD', 'מודיעין'],
+  ['RT', 'רחובות'],
+  ['ASD', 'אשדוד'],
+  ['AN', 'אשקלון'],
+]);
 
 class Movie {
   constructor(cinema, name, date, time, img, link, text, trailer) {
@@ -21,13 +36,22 @@ class Movie {
     <img
       src="${this.img}"
       class="movie-img"
+      data-cinema="${this.cinema}"
+      data-name="${this.name}"
+      data-date="${this.date}"
+      data-time="${this.time}"
+      data-img="${this.img}"
+      data-link="${this.link}"
+      data-text="${this.text}"
       data-trailer="${this.trailer}"
     />
     <div class="movie-title-container">
         <p class="movie-title movie-text">${this.name}</p>
     </div>
     <div class="movie-details-container">
-      <p class="movie-cinema movie-text">${this.cinema} HOT CINEMA</p>
+      <p class="movie-cinema movie-text">${
+        cinemaNameMap.get(this.cinema) ? cinemaNameMap.get(this.cinema) : ''
+      } HOT CINEMA</p>
       <p class="movie-date movie-text">${this.date}</p>
       <p class="movie-time movie-text">${this.time}</p> 
     </div>
@@ -39,15 +63,25 @@ class Movie {
   </div>
     `;
   }
+
+  getCinemaName() {
+    return cinemaNameMap.get(this.cinema);
+  }
 }
 
 moviesContainer.addEventListener('click', (e) => {
   if (e.target.classList.contains('movie-img')) {
-    console.log('Trailer playing ...');
-    const youtubeUrl = e.target.getAttribute('data-trailer');
-    youtubeUrl
-      ? openYoutubePlayer(youtubeUrl)
-      : console.log('Trailer link not found');
+    const currentMovie = new Movie(
+      e.target.getAttribute('data-cinema'),
+      e.target.getAttribute('data-name'),
+      e.target.getAttribute('data-date'),
+      e.target.getAttribute('data-time'),
+      e.target.getAttribute('data-img'),
+      e.target.getAttribute('data-link'),
+      e.target.getAttribute('data-text'),
+      e.target.getAttribute('data-trailer')
+    );
+    loadModalWithInfo(currentMovie);
   }
 });
 
@@ -62,12 +96,49 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !modal.classList.contains('hidden')) removeModal();
 });
 
-function openYoutubePlayer(youtubeUrl) {
+btnModalClose.addEventListener('click', (e) => {
+  removeModal();
+});
+
+function openYoutubePlayer(currentMovie) {
   const youtubePlayerContainer = document.getElementById(
     'youtube-player-container'
   ); // Make sure this exists in your HTML
+  youtubePlayerContainer.innerHTML = `
+    <div class modal-container>
+      <iframe class="youtube-player" width="560" height="315" src="${currentMovie?.trailer}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  `;
+}
+
+function loadModalWithInfo(movie) {
   showModal();
-  youtubePlayerContainer.innerHTML = `<iframe width="560" height="315" src="${youtubeUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+  openYoutubePlayer(movie);
+  loadModalAdditionInfo(movie);
+}
+
+function loadModalAdditionInfo(movie) {
+  // if (modalHeader) modalHeader.innerHTML = `${movie?.name}`;
+  if (modalAdditional) {
+    modalAdditional.innerHTML = `
+    <div class="movie-title-container movie-title-container-modal">
+    <p class="movie-title movie-text">${movie.name}</p>
+</div>
+<div class="movie-details-container">
+  <p class="movie-cinema movie-text">${
+    cinemaNameMap.get(movie.cinema) ? cinemaNameMap.get(movie.cinema) : ''
+  } HOT CINEMA</p>
+  <p class="movie-date movie-text">${movie.date}</p>
+  <p class="movie-time movie-text">${movie.time}</p> 
+</div>
+<a
+  class="movie-link btn movie-link-modal"
+  href="${movie.link}"
+  >לרכישה</a
+>
+</div>
+    `;
+  }
 }
 
 function generateMultipleMarkup(movies) {
@@ -87,7 +158,7 @@ function removeModal() {
 }
 
 const movie1 = new Movie(
-  'כפר סבא',
+  'KSO',
   'מפרץ ההרפתקאות: סרט העל עברית',
   '11/12/2023',
   '17:00',
@@ -98,7 +169,7 @@ const movie1 = new Movie(
 );
 
 const movie2 = new Movie(
-  'כרמיאל',
+  'KL',
   'מפרץ ההרפתקאות: סרט העל עברית',
   '11/12/2023',
   '17:00',
@@ -109,7 +180,7 @@ const movie2 = new Movie(
 );
 
 const movie3 = new Movie(
-  'קריון',
+  'KR',
   'מפרץ ההרפתקאות: סרט העל עברית',
   '11/12/2023',
   '17:00',
@@ -120,7 +191,7 @@ const movie3 = new Movie(
 );
 
 const movie4 = new Movie(
-  'כרמיאל',
+  'PT',
   'הארי פוטר',
   '15/1/2024',
   '12:00',
@@ -131,7 +202,7 @@ const movie4 = new Movie(
 );
 
 const movie5 = new Movie(
-  'קריון',
+  'MOD',
   'מפרץ ההרפתקאות: סרט העל עברית',
   '11/12/2023',
   '17:00',
@@ -142,7 +213,7 @@ const movie5 = new Movie(
 );
 
 const movie6 = new Movie(
-  'אשקלון',
+  'AN',
   'מפרץ ההרפתקאות: סרט העל עברית',
   '11/12/2023',
   '17:00',
@@ -152,6 +223,17 @@ const movie6 = new Movie(
   'https://www.youtube.com/embed/f95yj7d8A3c?si=Im4ILY8vXuofd0nt'
 );
 
-const movies = [movie1, movie2, movie3, movie4, movie5, movie6];
+const movie7 = new Movie(
+  'MOD',
+  'מפרץ ההרפתקאות: סרט העל עברית',
+  '11/12/2023',
+  '17:00',
+  'https://hotcinema.co.il/images/PP2_MightyMovie_Poster.jpg?w=192&h=279&mode=crop',
+  'https://hotcinema.co.il/movie/2393/paw-patrol:-the-mighty-movie',
+  'Buy now',
+  'https://www.youtube.com/embed/f95yj7d8A3c?si=Im4ILY8vXuofd0nt'
+);
+
+const movies = [movie1, movie2, movie3, movie4, movie5, movie6, movie7];
 
 generateMultipleMarkup(movies);
