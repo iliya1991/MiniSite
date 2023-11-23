@@ -162,6 +162,7 @@ header {
   grid-template-columns: 1fr 1fr;
   gap: 15px;
   margin-top: 15px;
+  width: 100%;
 }
 
 .divider {
@@ -246,6 +247,14 @@ header {
 .filter-btn-all {
   text-decoration: underline;
 }
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 1200px;
+  z-index: 10;
+}
+
 /* */
 
 /* MODAL */
@@ -253,7 +262,7 @@ header {
 .modal {
   display: grid; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 1000; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%;

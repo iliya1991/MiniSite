@@ -198,6 +198,23 @@ btnModalClose.addEventListener('click', (e) => {
   removeModal();
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const dropdown = document.querySelector('.dropdown');
+  const stickyOffset = dropdown.offsetTop;
+
+  function checkSticky() {
+    if (window.pageYOffset >= stickyOffset) {
+      dropdown.classList.add('sticky');
+      moviesContainer.style.paddingTop = '123px';
+    } else {
+      dropdown.classList.remove('sticky');
+      moviesContainer.style.paddingTop = '0px';
+    }
+  }
+
+  window.addEventListener('scroll', checkSticky);
+});
+
 function openYoutubePlayer(currentMovie) {
   const youtubePlayerContainer = document.getElementById(
     'youtube-player-container'
@@ -267,7 +284,11 @@ function generateMarkupFiltered(filter) {
 
 function reloadMovies() {
   if (btnMainFilter)
-    btnMainFilter.innerHTML = cinemaNameMap.get(filter.toString());
+    filter.toString() === 'ALL'
+      ? (btnMainFilter.innerHTML = cinemaNameMap.get(filter.toString()))
+      : (btnMainFilter.innerHTML =
+          cinemaNameMap.get(filter.toString()) + ' HOT CINEMA');
+
   generateMarkupFiltered(filter);
 }
 // generateMultipleMarkup(allMovies);
