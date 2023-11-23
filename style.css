@@ -27,7 +27,14 @@
 
 .header-img {
   width: 1200px;
-  /* border-radius: 8px; */
+  object-fit: cover;
+  object-position: center;
+}
+
+.img-container {
+  width: 1200px;
+  height: 300px;
+  overflow: hidden;
 }
 
 body {
@@ -38,6 +45,7 @@ article {
   width: 1200px;
   background-color: var(--primary-color);
   margin: auto;
+  padding-bottom: 84px;
 }
 
 .movies-container {
@@ -192,8 +200,8 @@ header {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 60%;
-  background-color: var(--secondary-accent-color);
+  width: 40%;
+  /* background-color: var(--secondary-accent-color); */
   border-radius: 0 0 15px 15px;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -205,6 +213,7 @@ header {
   /* display: block; */
   visibility: visible;
   opacity: 1;
+  background-color: var(--secondary-color);
 }
 
 .filter-main-btn {
@@ -221,8 +230,21 @@ header {
 .filter-btn {
   padding-bottom: 16px;
   cursor: pointer;
+  font-size: 24px;
+  text-align: center;
+  font-weight: 500;
+  transition: font-weight 0.3s ease;
+  background-color: var(--secondary-color);
 }
 
+.filter-btn:hover {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.filter-btn-all {
+  text-decoration: underline;
+}
 /* */
 
 /* MODAL */
@@ -289,4 +311,10 @@ header {
 
 .movie-title-container-modal {
   background-color: var(--secondary-color);
+}
+
+footer {
+  padding: 40px;
+  background-color: var(--secondary-color);
+  text-align: center;
 }
